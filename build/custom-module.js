@@ -3,7 +3,7 @@ const fs = require('fs')
 const _cutomChunkModuls = require('../config').module
 
 let cutomChunkModuls = _cutomChunkModuls
-if (typeof process.env.npm_config_module === 'string') {
+if (typeof process.env.npm_config_module === 'string' && process.env.npm_config_module) {
   let modele = process.env.npm_config_module.split(/\s/)
   cutomChunkModuls = cutomChunkModuls.filter((item) => {
     if (modele.indexOf(item.id) === -1) {
@@ -13,7 +13,7 @@ if (typeof process.env.npm_config_module === 'string') {
   })
 }
 
-if (typeof process.env.NODE_ENV !== 'production') {
+if ( process.env.NODE_ENV !== 'production') {
   cutomChunkModuls = [
     cutomChunkModuls[0],
   ]
