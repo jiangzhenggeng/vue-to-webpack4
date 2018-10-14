@@ -7,8 +7,9 @@ const CSSSplitWebpackPlugin = require('css-split-webpack-plugin').default
 const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-const { cutomChunkModuls } = require('./custom-module')
+const {cutomChunkModuls} = require('./custom-module')
 const METADATA = require('./custom-metadata')
 const webpackPluginsConf = require('./webpack.plugins.conf')
 const webpackLoader = require('./webpack.loader.conf')
@@ -111,7 +112,6 @@ const webpackConfig = merge(baseWebpackConfig, {
     },
   },
   plugins: [
-    ...webpackPluginsConf,
     new CSSSplitWebpackPlugin({
       size: 4000,
       filename: utils.assetsPath('css/[name]-[part].[ext]'),
@@ -152,10 +152,20 @@ const webpackConfig = merge(baseWebpackConfig, {
       allChunks: true,
     }),
     ...HtmlWebpackPluginObjectConfig,
+    ...webpackPluginsConf,
     // keep module.id stable when vendor modules does not change
     new webpack.HashedModuleIdsPlugin(),
     // enable scope hoisting
     new webpack.optimize.ModuleConcatenationPlugin(),
+
+    // copy custom static assets
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, '../static'),
+        to: path.join(config.build.assetsRoot, config.build.assetsSubDirectory),
+        ignore: ['.*'],
+      },
+    ]),
   ],
 })
 

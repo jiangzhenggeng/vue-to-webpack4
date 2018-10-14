@@ -5,6 +5,7 @@ const merge = require('webpack-merge')
 const path = require('path')
 const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 const opn = require('opn')
@@ -53,7 +54,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     },
   },
   plugins: [
-    ...webpackPluginsConf,
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     new webpack.NoEmitOnErrorsPlugin(),
@@ -65,6 +65,15 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     }, (cutomChunkModuls[0] || {}).options || {}, {
       filename: 'index.html',
     })),
+    ...webpackPluginsConf,
+    // copy custom static assets
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, '../static'),
+        to: config.dev.assetsSubDirectory,
+        ignore: ['.*'],
+      },
+    ]),
   ],
 })
 

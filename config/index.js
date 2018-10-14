@@ -15,6 +15,7 @@ Object.keys(networkInterfaces).forEach((key) => {
 })
 
 module.exports = {
+  dll: true,
   module: [
     {
       id: 'main',
