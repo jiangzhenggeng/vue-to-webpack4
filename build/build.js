@@ -41,7 +41,7 @@ const buildCreate = ()=>{
 if (process.env['npm_config_not-clean']) {
   buildCreate()
 }else{
-  rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), _err => {
+  rm(path.join(config.build.assetsRoot, '/*'), _err => {
     if (_err) throw _err
     buildCreate()
   })

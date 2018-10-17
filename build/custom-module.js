@@ -13,14 +13,25 @@ if (typeof process.env.npm_config_module === 'string' && process.env.npm_config_
   })
 }
 
-if ( process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production') {
   cutomChunkModuls = [
     cutomChunkModuls[0],
   ]
 }
 
+cutomChunkModuls.forEach((module) => {
+  if (module.chunks) {
+    let newChunks = {}
+    Object.keys(module.chunks).map((subModuleKey) => {
+      newChunks[module.id + subModuleKey] = module.chunks[subModuleKey]
+    })
+    module.chunks = newChunks
+  }
+})
+
 let notFindModule = []
 let entryObject = {}
+let chunksObject = {}
 cutomChunkModuls.forEach((module, index) => {
   if (module.entry) {
     let entry = {}
@@ -32,6 +43,7 @@ cutomChunkModuls.forEach((module, index) => {
   }
   if (module.chunks) {
     Object.keys(module.chunks).forEach((subModule) => {
+      chunksObject[subModule] = module.chunks[subModule]
       module.chunks[subModule].forEach((moduleName) => {
         if (!fs.existsSync(path.join(__dirname, '../node_modules', moduleName))) {
           notFindModule.push(moduleName)
@@ -48,4 +60,5 @@ if (notFindModule.length) {
 
 module.exports = {}
 module.exports.entry = entryObject
+module.exports.chunks = chunksObject
 module.exports.cutomChunkModuls = cutomChunkModuls

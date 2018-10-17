@@ -12,6 +12,7 @@ let banner = `/*!
  *
  * Date: ${new Date()}
  *
- */`
+ */
+`
 
 module.exports = banner

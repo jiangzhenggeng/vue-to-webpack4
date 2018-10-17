@@ -5,6 +5,7 @@ const merge = require('webpack-merge')
 const path = require('path')
 const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 const opn = require('opn')
@@ -22,7 +23,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     rules: webpackLoader({
       sourceMap: config.dev.productionSourceMap,
       extract: false,
-      usePostCSS: false,
+      usePostCSS: true,
     }),
   },
   // cheap-module-eval-source-map is faster for development
@@ -53,18 +54,25 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     },
   },
   plugins: [
-    ...webpackPluginsConf,
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin(merge({
-      template: 'index.html',
       filename: 'index.html',
       inject: true,
     }, (cutomChunkModuls[0] || {}).options || {}, {
       filename: 'index.html',
     })),
+    ...webpackPluginsConf,
+    // copy custom static assets
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, '../static'),
+        to: config.dev.assetsSubDirectory,
+        ignore: ['.*'],
+      },
+    ]),
   ],
 })
 
@@ -79,12 +87,11 @@ module.exports = new Promise((resolve, reject) => {
       // add port to devServer config
       devWebpackConfig.devServer.port = port
 
-      let param = {
-        projectId: '8726300114595744866',
-        userId: '5895824920160793212',
-        productCode: 'bim5d-zx',
+      let url = `http://${devWebpackConfig.devServer.host}:${port}/`
+      let openUrl = (cutomChunkModuls[0] || {}).openUrl
+      if (openUrl) {
+        url = `http://${openUrl.host||devWebpackConfig.devServer.host}:${openUrl.port||port}${openUrl.path}`
       }
-      let url = `http://${devWebpackConfig.devServer.host}:${port}/#/page?${qs.stringify(param)}`
       // Add FriendlyErrorsPlugin
       devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
         compilationSuccessInfo: {

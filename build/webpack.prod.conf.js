@@ -7,8 +7,9 @@ const CSSSplitWebpackPlugin = require('css-split-webpack-plugin').default
 const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-const { cutomChunkModuls } = require('./custom-module')
+const {cutomChunkModuls} = require('./custom-module')
 const METADATA = require('./custom-metadata')
 const webpackPluginsConf = require('./webpack.plugins.conf')
 const webpackLoader = require('./webpack.loader.conf')
@@ -18,7 +19,6 @@ const webpackLoader = require('./webpack.loader.conf')
 // see https://github.com/ampedandwired/html-webpack-plugin
 let HtmlWebpackPluginBaseConfig = {
   filename: config.build.index,
-  template: 'index.html',
   inject: true,
   minify: {
     removeComments: true,
@@ -28,12 +28,14 @@ let HtmlWebpackPluginBaseConfig = {
     // https://github.com/kangax/html-minifier#options-quick-reference
   },
 }
+let runtime = 'runtime'
+let vendors = 'vendors-all-common'
 let cacheGroups = {}
 let HtmlWebpackPluginObjectConfig = []
 cutomChunkModuls.forEach((module) => {
   if (module.entry) {
     let htmlPlugin = new HtmlWebpackPlugin(merge(HtmlWebpackPluginBaseConfig, module.options || {}, {
-      chunks: [...Object.keys(module.chunks || {}), ...Object.keys(module.entry || {})],
+      chunks: [runtime,vendors,...Object.keys(module.chunks || {}), ...Object.keys(module.entry || {})],
     }))
     HtmlWebpackPluginObjectConfig.push(htmlPlugin)
   }
@@ -95,7 +97,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       cacheGroups: {
         vendors: {
           priority: -10,
-          name: 'vendors',
+          name: vendors,
           chunks: 'initial',
           enforce: true,
           test (module) {
@@ -107,11 +109,10 @@ const webpackConfig = merge(baseWebpackConfig, {
       },
     },
     runtimeChunk: {
-      name: 'runtime',
+      name: runtime,
     },
   },
   plugins: [
-    ...webpackPluginsConf,
     new CSSSplitWebpackPlugin({
       size: 4000,
       filename: utils.assetsPath('css/[name]-[part].[ext]'),
@@ -144,18 +145,23 @@ const webpackConfig = merge(baseWebpackConfig, {
     // }),
     // extract css into its own file
     new MiniCssExtractPlugin({
-      filename: utils.assetsPath('css/[name].[contenthash].css'),
-      // Setting the following option to `false` will not extract CSS from codesplit chunks.
-      // Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
-      // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`,
-      // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
-      allChunks: true,
+      filename: utils.assetsPath('css/[name].[contenthash].css')
     }),
     ...HtmlWebpackPluginObjectConfig,
+    ...webpackPluginsConf,
     // keep module.id stable when vendor modules does not change
     new webpack.HashedModuleIdsPlugin(),
     // enable scope hoisting
     new webpack.optimize.ModuleConcatenationPlugin(),
+
+    // copy custom static assets
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, '../static'),
+        to: path.join(config.build.assetsRoot, config.build.assetsSubDirectory),
+        ignore: ['.*'],
+      },
+    ]),
   ],
 })
 

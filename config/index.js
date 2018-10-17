@@ -15,6 +15,7 @@ Object.keys(networkInterfaces).forEach((key) => {
 })
 
 module.exports = {
+  dll: true,
   module: [
     {
       id: 'main',
@@ -25,9 +26,13 @@ module.exports = {
         filename: path.resolve(__dirname, '../dist/index.html'),
         template: 'index.html'
       },
+      assetsFiles: ['*.html'],
       chunks: {
         'vendor-babel-polyfill': ['babel-polyfill', 'es6-promise'],
         'vue-libs': ['vue-awesome-swiper', 'v-viewer', 'vue-grid-layout']
+      },
+      openUrl: {
+        path: '/'
       }
     },
     {
@@ -35,9 +40,13 @@ module.exports = {
       entry: {
         app: './src/main2.js'
       },
+      assetsFiles: ['main2.html'],
       options: {
         filename: path.resolve(__dirname, '../dist/main2.html'),
         template: 'index.html'
+      },
+      openUrl: {
+        path: '/'
       }
     }
   ],
