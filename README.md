@@ -79,5 +79,8 @@ npm run build  --module='main'
 # 打包 module.main和module.main2 项目
 npm run build  --module='main main2'
 
+# 打包 module.main和module.main2 项目
+npm run build  --module='main main2' --client=h5
+
 ```
      
