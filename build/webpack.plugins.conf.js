@@ -14,11 +14,10 @@ if (config.dll) {
   Object.keys(chunks).forEach((key) => {
     let DllReferencePluginNew = new webpack.DllReferencePlugin({
       manifest: require('../static/dll/' + key + '-manifest.json'),
-      context: path.resolve(__dirname, '../'),
+      context: path.resolve(__dirname, '../')
     })
     DllReferencePluginConfig.push(DllReferencePluginNew)
   })
-
   Object.keys(cutomChunkModuls).forEach((item) => {
     let module = cutomChunkModuls[item]
 
@@ -27,13 +26,13 @@ if (config.dll) {
         {
           path: utils.assetsPath('dll'),
           glob: `${module.id}*.dll.js`,
-          globPath: path.resolve(__dirname, '../static/dll/'),
-        },
+          globPath: path.resolve(__dirname, '../static/dll/')
+        }
       ],
       publicPath: process.env.NODE_ENV === 'production'
         ? config.build.assetsPublicPath
         : config.dev.assetsPublicPath,
-      append: false,
+      append: false
     }
     if (module.assetsFiles) {
       options.files = module.assetsFiles
@@ -63,12 +62,11 @@ module.exports = [
         loader: 'babel-loader',
         options: {
           babelrc: true,
-          cacheDirectory: path.resolve(__dirname, '..', '.cache--happypack'),
-        },
-      }],
-    threadPool: happyThreadPool,
-  }),
+          cacheDirectory: path.resolve(__dirname, '..', '.cache--happypack')
+        }
+      }
+    ],
+    threadPool: happyThreadPool
+  })
 ]
-
-
 
