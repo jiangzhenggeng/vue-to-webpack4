@@ -23,10 +23,10 @@ let HtmlWebpackPluginBaseConfig = {
   minify: {
     removeComments: true,
     collapseWhitespace: true,
-    removeAttributeQuotes: false,
+    removeAttributeQuotes: false
     // more options:
     // https://github.com/kangax/html-minifier#options-quick-reference
-  },
+  }
 }
 let runtime = 'runtime'
 let vendors = 'vendors-all-common'
@@ -35,7 +35,7 @@ let HtmlWebpackPluginObjectConfig = []
 cutomChunkModuls.forEach((module) => {
   if (module.entry) {
     let htmlPlugin = new HtmlWebpackPlugin(merge(HtmlWebpackPluginBaseConfig, module.options || {}, {
-      chunks: [runtime,vendors,...Object.keys(module.chunks || {}), ...Object.keys(module.entry || {})],
+      chunks: [runtime,vendors,...Object.keys(module.chunks || {}), ...Object.keys(module.entry || {})]
     }))
     HtmlWebpackPluginObjectConfig.push(htmlPlugin)
   }
@@ -64,7 +64,7 @@ cutomChunkModuls.forEach((module) => {
         priority: 100,
         name: item,
         chunks: 'initial',
-        enforce: true,
+        enforce: true
       }
     })
   }
@@ -77,14 +77,14 @@ const webpackConfig = merge(baseWebpackConfig, {
     rules: webpackLoader({
       sourceMap: config.build.productionSourceMap,
       extract: true,
-      usePostCSS: true,
-    }),
+      usePostCSS: true
+    })
   },
   devtool: config.build.productionSourceMap ? config.build.devtool : false,
   output: {
     path: config.build.assetsRoot,
     filename: utils.assetsPath('js/[name]-[chunkhash].js'),
-    chunkFilename: utils.assetsPath('js/[id]-[name]-[chunkhash].js'),
+    chunkFilename: utils.assetsPath('js/[id]-[name]-[chunkhash].js')
   },
   optimization: {
     splitChunks: {
@@ -103,24 +103,24 @@ const webpackConfig = merge(baseWebpackConfig, {
           test (module) {
             let result = module.resource && /\.js$/.test(module.resource) && module.resource.indexOf(path.join(__dirname, '../node_modules')) === 0
             return result || false
-          },
+          }
         },
-        ...cacheGroups,
-      },
+        ...cacheGroups
+      }
     },
     runtimeChunk: {
-      name: runtime,
-    },
+      name: runtime
+    }
   },
   plugins: [
     new CSSSplitWebpackPlugin({
       size: 4000,
-      filename: utils.assetsPath('css/[name]-[part].[ext]'),
+      filename: utils.assetsPath('css/[name]-[part].[ext]')
     }),
     new webpack.BannerPlugin({
       banner: METADATA,
       raw: true,
-      entryOnly: true,
+      entryOnly: true
     }),
     new OptimizeCSSAssetsPlugin({
       // 注意不要写成 /\.css$/g
@@ -135,9 +135,9 @@ const webpackConfig = merge(baseWebpackConfig, {
         // 会使用到autoprefixer进行无关前缀的清理
         // 关闭autoprefixer功能
         // 使用postcss的autoprefixer功能
-        autoprefixer: false,
+        autoprefixer: false
       },
-      canPrint: true,
+      canPrint: true
     }),
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     // new webpack.DefinePlugin({
@@ -159,10 +159,10 @@ const webpackConfig = merge(baseWebpackConfig, {
       {
         from: path.resolve(__dirname, '../static'),
         to: path.join(config.build.assetsRoot, config.build.assetsSubDirectory),
-        ignore: ['.*'],
-      },
-    ]),
-  ],
+        ignore: ['.*']
+      }
+    ])
+  ]
 })
 
 if (config.build.productionGzip) {
@@ -181,7 +181,7 @@ if (config.build.productionGzip) {
         ')$',
       ),
       threshold: 10240,
-      minRatio: 0.8,
+      minRatio: 0.8
     }),
   )
 }

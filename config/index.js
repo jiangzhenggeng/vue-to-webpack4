@@ -33,6 +33,12 @@ module.exports = {
       },
       openUrl: {
         path: '/'
+      },
+      build: {
+        assetsRoot: path.resolve(__dirname,'../dist')
+      },
+      dev: {
+        assetsSubDirectory: '/'
       }
     },
     {

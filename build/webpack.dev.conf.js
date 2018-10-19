@@ -23,8 +23,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     rules: webpackLoader({
       sourceMap: config.dev.productionSourceMap,
       extract: false,
-      usePostCSS: true,
-    }),
+      usePostCSS: true
+    })
   },
   // cheap-module-eval-source-map is faster for development
   devtool: config.dev.devtool,
@@ -34,8 +34,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
-        {from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html')},
-      ],
+        {from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html')}
+      ]
     },
     hot: true,
     contentBase: false, // since we use CopyWebpackPlugin.
@@ -50,8 +50,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
-      poll: config.dev.poll,
-    },
+      poll: config.dev.poll
+    }
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
@@ -60,9 +60,9 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin(merge({
       filename: 'index.html',
-      inject: true,
+      inject: true
     }, (cutomChunkModuls[0] || {}).options || {}, {
-      filename: 'index.html',
+      filename: 'index.html'
     })),
     ...webpackPluginsConf,
     // copy custom static assets
@@ -70,10 +70,10 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       {
         from: path.resolve(__dirname, '../static'),
         to: config.dev.assetsSubDirectory,
-        ignore: ['.*'],
-      },
-    ]),
-  ],
+        ignore: ['.*']
+      }
+    ])
+  ]
 })
 
 module.exports = new Promise((resolve, reject) => {
@@ -90,16 +90,16 @@ module.exports = new Promise((resolve, reject) => {
       let url = `http://${devWebpackConfig.devServer.host}:${port}/`
       let openUrl = (cutomChunkModuls[0] || {}).openUrl
       if (openUrl) {
-        url = `http://${openUrl.host||devWebpackConfig.devServer.host}:${openUrl.port||port}${openUrl.path}`
+        url = `http://${openUrl.host || devWebpackConfig.devServer.host}:${openUrl.port || port}${openUrl.path}`
       }
       // Add FriendlyErrorsPlugin
       devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
         compilationSuccessInfo: {
-          messages: [`URL: ${url}`],
+          messages: [`URL: ${url}`]
         },
         onErrors: config.dev.notifyOnErrors
           ? utils.createNotifierCallback()
-          : undefined,
+          : undefined
       }))
       if (process.env.npm_config_open) {
         setTimeout(() => {

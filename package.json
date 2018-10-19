@@ -6,11 +6,14 @@
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --config build/webpack.dev.conf.js",
+    "main": "npm run dev --module=main",
     "h5": "npm run dev --module=h5-in-app -client=h5",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
     "dll": "node build/webpack.dll.config.js",
     "lint-fix": "eslint --ext .js,.vue src test/unit test/e2e/specs --fix",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "build:main": "npm run build --module=main",
+    "build:h5": "npm run build --module=h5-in-app --client=h5"
   },
   "dependencies": {
     "amfe-flexible": "^2.2.1",

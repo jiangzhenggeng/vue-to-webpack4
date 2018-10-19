@@ -18,6 +18,7 @@ if (config.dll) {
     })
     DllReferencePluginConfig.push(DllReferencePluginNew)
   })
+
   Object.keys(cutomChunkModuls).forEach((item) => {
     let module = cutomChunkModuls[item]
 
@@ -51,7 +52,8 @@ module.exports = [
   new VueLoaderPlugin(),
   // 解决moment打包的时候把所有的语言都打包进去的问题
   new webpack.ContextReplacementPlugin(
-    /moment[\/\\]locale$/,
+    // /moment[\/\\]locale$/,
+    /moment[\\]locale$/,
     /zh-cn/,
   ),
   ...DllReferencePluginConfig,
@@ -69,4 +71,3 @@ module.exports = [
     threadPool: happyThreadPool
   })
 ]
-

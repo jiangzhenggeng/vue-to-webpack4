@@ -24,23 +24,23 @@ let webpackConfig = {
     path: resolve('static/dll'),
     filename: '[name].[hash].dll.js',
     library: '_dll_[hash]',
-    libraryTarget: 'umd',
+    libraryTarget: 'umd'
   },
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'happypack/loader?id=babel-loader',
-      },
-    ],
+        loader: 'happypack/loader?id=babel-loader'
+      }
+    ]
   },
   // manifest是描述文件
   plugins: [
     new webpack.DllPlugin({
       name: '_dll_[hash]',
       path: resolve('static/dll/[name]-manifest.json'),
-      context: path.resolve(__dirname, '../'),
+      context: path.resolve(__dirname, '../')
     }),
     new HappyPack({
       id: 'babel-loader',
@@ -50,12 +50,13 @@ let webpackConfig = {
           options: {
             babelrc: true,
             cacheDirectory: path.resolve(__dirname,'..', '.cache--happypack'),
-            ...babelrc,
-          },
-        }],
-      threadPool: happyThreadPool,
-    }),
-  ],
+            ...babelrc
+          }
+        }
+      ],
+      threadPool: happyThreadPool
+    })
+  ]
 }
 
 rm(path.resolve(__dirname, '../static/dll'), _err => {
@@ -69,8 +70,8 @@ rm(path.resolve(__dirname, '../static/dll'), _err => {
     promise.push(new Promise((resolve, reject) => {
       webpack(merge(webpackConfig, {
         entry: {
-          [key]: chunks[key],
-        },
+          [key]: chunks[key]
+        }
       }), (err, stats) => {
         if (err) {
           reject(err)
